@@ -12,3 +12,20 @@
 - **Language**: Python (Pandas, Scikit-learn, Streamlit)
 - **Database**: MySQL (Docker/WSL2環境)
 - **Model**: 多変量線形回帰 (ラグ特徴量エンジニアリング)
+
+## 4. データベース設計 (Table Definition)
+
+本プロジェクトでは、時系列データの整合性を保つため、MySQL上に以下のテーブルを定義しています。
+
+### テーブル名: `kinugawa_hydromet`
+鬼怒川の観測データ（水位・雨量）を1時間単位で格納します。
+
+| カラム名 | データ型 | 制約 | 説明 |
+| :--- | :--- | :--- | :--- |
+| `id` | INT | PRIMARY KEY, AUTO_INCREMENT | レコード識別用の連番 |
+| `observation_datetime` | DATETIME | UNIQUE, NOT NULL | 観測日時（24時表記は翌日0時として処理済み） |
+| `water_level_m` | FLOAT | - | 鬼怒川水海道観測所の水位 (m) |
+| `rain_local_mm` | FLOAT | - | 水海道観測所の降水量 (mm) |
+| `rain_upstream_mm` | FLOAT | - | 川治観測所（上流）の降水量 (mm) |
+
+- **インデックス設計**: データの重複を避けるため、`observation_datetime` にUNIQUE制約を付与し、高速な検索を可能にしています。
